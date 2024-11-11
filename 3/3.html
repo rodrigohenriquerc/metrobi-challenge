@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>3 - Flexbox</title>
+    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <link rel="stylesheet" href="./3.css" />
+
+    <script type="text/javascript" src="https://livejs.com/live.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      function Challenge() {
+        return (
+          <div className="container flex col">
+            <header>
+              <p className="text">Header</p>
+            </header>
+
+            <Row flex={8}>
+              <Col flex={1}>
+                <Elm title="Hero" flex={1} color="#d9b3e6" />
+                <Elm title="Sidebar" flex={1.5} color="#b2d8b2" />
+              </Col>
+              <Col flex={1.5}>
+                <Elm title="Main Content" flex={2} color="#ffd580" />
+                <Elm title="Extra Content" flex={1} color="#808080" />
+              </Col>
+            </Row>
+
+            <Row flex={2}>
+              <Col flex={2.5}>
+                <Elm title="Related Images" flex={1} color="#77b300" />
+              </Col>
+              <Col flex={1}>
+                <Elm title="Related Posts" flex={1} color="#ffcceb" />
+              </Col>
+            </Row>
+
+            <footer>
+              <p className="text">Footer</p>
+            </footer>
+          </div>
+        );
+      }
+
+      function Row({ children, flex }) {
+        return (
+          <div className="flex row" style={{ flex }}>
+            {children}
+          </div>
+        );
+      }
+
+      function Col({ children, flex }) {
+        return (
+          <div className="flex col" style={{ flex }}>
+            {children}
+          </div>
+        );
+      }
+
+      function Elm({ title, flex, color }) {
+        return (
+          <div style={{ flex, backgroundColor: color }}>
+            <p className="text">{title}</p>
+          </div>
+        );
+      }
+
+      const container = document.getElementById("root");
+      const root = ReactDOM.createRoot(container);
+      root.render(<Challenge />);
+    </script>
+  </body>
+</html>

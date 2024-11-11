@@ -1,0 +1,131 @@
+1. Use the first egg to narrow down the range of possible floors
+2. Use the second egg to search the remaining range of floors one by one
+
+First: what won't work.
+- Linear search: it would take 100 steps to search every floor
+- Binary search: it would take 1 step to check the 51th floor + 50 steps to check the floors below if the egg breaks.
+
+Second: what may work.
+- Even though binary search does not work, skipping floors seems like a good idea, since the number of remaining steps is reduced.
+- The initial problem with binary search is that skipping 50 floors may result in having to check these 50 floors one by one later.
+- So, if an interval of 1 floor (linear search) is too small, and an interval of 50 floors (binary search) is too much, what would be an ideal interval?
+
+Considering there are 100 floors, we could:
+- Skip every 2 floors
+- Skip every 5 floors
+- Skip every 10 floors
+- Skip every 20 floors
+
+Let's investigate how much steps it would take using each of the proposed intervals.
+To do that, we can use the algorithm below, replacing X with the chosen interval.
+
+count = 0
+
+Go up X floors above the current floor and drop the egg (count++)
+  Did the egg break?
+    Yes
+      Search every floor lastly skipped until the safe floor is found (for each step count++)
+    No
+      Read the first instruction again
+
+Results
+
+Skipping every 2 floors
+- Number of steps until the last floor: 100 / 2 = 50
+- Number of steps lastly skipped: 1
+- Total number of steps: 51 (worse)
+
+Skipping every 5 floors
+- Number of steps until the last floor: 100 / 5 = 20
+- Number of steps lastly skipped: 4
+- Total number of steps: 24 (better)
+
+Skipping every 10 floors:
+- Number of steps until the last floor: 100 / 10 = 10
+- Number of steps lastly skipped: 9
+- Total number of steps: 19 (even better)
+
+Skipping every 20 floors:
+- Number of steps until the last floor: 100 / 20 = 5
+- Number of steps lastly skipped: 19
+- Total number of steps: 24 (it started getting worse again)
+
+Skipping every 25 floors:
+- Number of steps until the last floor: 100 / 25 = 4
+- Number of steps lastly skipped: 24
+- Total number of steps: 28 (it's getting even worse)
+
+Skipping every 50 floors:
+- Number of steps until the last floor: 100 / 50 = 2
+- Number of steps lastly skipped: 49
+- Total number of steps: 51 (the same as skipping every 2 floors)
+
+It seems like skipping every 10 floors might be a good idea.
+It is, in fact, a good idea. 
+The question is: is this the best solution?
+
+We found out that skipping a number of floors will help us go faster, but only until a limit where this same number proportionally slows us again.
+
+So far, it seems like this limit is an interval of 10.
+
+But, what if we start from a grater interval, minimizing the first egg drops, and decrement this interval as we proceed, minimizing the second egg drops?
+
+To find out, we need to determine an initial interval X, which must respect the following condition:
+  
+  X is such a number that X + (X-1) + (X-2) + ... + 1 is at least 100 (ensure all the floors are considered)
+
+Which can be simplified to:
+
+  X + (X-1) + (X-2) + ... + 1 >= 100
+
+Or:
+
+  1 + ... + (X-2) + (x-1) + X >= 100
+
+This is: the sum of the first X natural numbers must be higher than or equal to 100.
+
+Luckly, finding the sum of the first X natural numbers is a trivial problem already solved long before we started solving this eggs problem.
+
+The solution is given by mathematics, per the formula:
+
+  S = X(X + 1) / 2
+
+  or
+
+  X(X + 1) / 2 = S
+
+In this case, we know S is 100 (number of floors):
+
+  X(X + 1) / 2 = 100
+  
+Also, in this case, we know that the sum of the first X naturals must be AT LEAST 100, not necessarily 100 exactly. So:
+
+  X(X + 1) / 2 >= 100
+
+Proceeding:
+  
+  X(X + 1) / 2 >= 100
+  X(X + 1) >= 100 * 2
+  Xˆ2 + X >= 200
+
+We find out, by trial and error, that the minimum value of X must be 14.
+
+So 14 is the first natural number that when added to its predecessors results in a number greater than or equal to 100.
+
+Which makes 14 the maximum number of steps to find the highest safe floor.
+
+Final answer
+
+To find the highest floor from which an egg can be dropped without braking, with as few drops as possible in the worst-case scenario, we can use an updated version 
+of the previously described algorithm:
+
+count = 0
+X = 14
+
+Go up X floors above the current floor and drop the egg (count++)
+  Did the egg break?
+    Yes
+      Search every floor lastly skipped until the safe floor is found (for each step count++)
+    No
+      X = X - 1
+      Read the first instruction again
